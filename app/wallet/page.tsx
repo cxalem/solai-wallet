@@ -1,4 +1,5 @@
 import Chat from "@/components/Chat";
+import { Wallet } from "@/components/Wallet";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -11,9 +12,11 @@ export default async function WalletPage() {
   }
 
   return (
-    <section className="flex flex-col justify-between min-h-[calc(100vh-100px)]">
-      <h1>Hello</h1>
+    <div className="grid grid-cols-1 md:grid-cols-2 min-h-[calc(100vh-100px)] pt-4 max-w-7xl mx-auto gap-6">
+      <section>
+        <Wallet />
+      </section>
       <Chat />
-    </section>
+    </div>
   );
 }

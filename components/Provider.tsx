@@ -1,16 +1,26 @@
 "use client";
 
 import { PrivyProvider } from "@privy-io/react-auth";
+import { toSolanaWalletConnectors } from "@privy-io/react-auth/solana";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <PrivyProvider
-      appId="cm9heti9z01ell70lye6yiwlj"
-      clientId="client-WY5iuNEjg97LH3Zhfa1eu3Leb4tkezN9a1xZ7GPHFXygV"
+      appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID!}
+      clientId={process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!}
       config={{
         // Customize Privy's appearance in your app
         appearance: {
+          walletChainType: "solana-only",
           accentColor: "#676FFF",
+        },
+        externalWallets: {
+          solana: {
+            connectors: toSolanaWalletConnectors(),
+          },
         },
         // Create embedded wallets for users who don't have a wallet.
         embeddedWallets: {
@@ -18,7 +28,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         },
       }}
     >
-      {children}
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     </PrivyProvider>
   );
 }
