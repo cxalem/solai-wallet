@@ -1,14 +1,11 @@
 "use client";
 
 import { useChat } from "@ai-sdk/react";
-import { LoginButton } from "@/components/LoginButton";
 
 export default function Home() {
   const { messages, input, handleInputChange, handleSubmit } = useChat();
   return (
-    
     <>
-    <LoginButton />
       <div className="flex flex-col w-full max-w-md py-24 mx-auto stretch">
         {messages.map((message) => (
           <div key={message.id} className="whitespace-pre-wrap">
