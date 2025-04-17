@@ -6,6 +6,8 @@ export function LoginButton() {
   const { login } = useLogin();
   const { wallets } = useSolanaWallets();
 
+  console.log(wallets);
+
   // Disable login when Privy is not ready or the user is already authenticated
   const disableLogin = !ready || (ready && authenticated);
 
