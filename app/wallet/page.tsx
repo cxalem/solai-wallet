@@ -10,5 +10,10 @@ export default async function WalletPage() {
     redirect("/");
   }
 
-  return <Chat />;
+  return (
+    <section className="flex flex-col justify-between min-h-[calc(100vh-100px)]">
+      <h1>Hello</h1>
+      <Chat />
+    </section>
+  );
 }
