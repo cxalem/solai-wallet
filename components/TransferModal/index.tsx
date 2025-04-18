@@ -23,6 +23,9 @@ import { TransferForm, type ProcessedTransferData } from "./transfer-form";
 import { TransferConfirmation } from "./transfer-confirmation";
 import { ProcessingAnimation } from "./processing-animation";
 import { TransactionResult } from "./transaction-result";
+import { ConnectedSolanaWallet, useSolanaWallets } from "@privy-io/react-auth";
+import { Connection, PublicKey } from "@solana/web3.js";
+import { buildUsdcTransferTx } from "./actions";
 
 /* ------------------------------------------------------------------ */
 /* Types & constants                                                  */
@@ -30,9 +33,6 @@ import { TransactionResult } from "./transaction-result";
 
 type TransferStatus = "success" | "error" | null;
 type Step = "form" | "confirm" | "processing" | "result";
-
-const transactionId =
-  "5wBtXGYr1YM3wuqC97JmPCeDUJHJQFj7gTYU7c63iu2EhdgEJLU8F8SLiLSfYD3SpVCR";
 
 const TITLES: Record<Step, string> = {
   form: "Transfer Funds",
@@ -60,11 +60,21 @@ const STEP_INDEX: Record<Step, number> = {
 export default function TransferModal() {
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState<Step>("form");
+  const [transactionSignature, setTransactionSignature] = useState<
+    string | null
+  >(null);
   const [transferData, setTransferData] =
     useState<ProcessedTransferData | null>(null);
   const [transferStatus, setTransferStatus] = useState<TransferStatus>(null);
 
   const isProcessing = step === "processing";
+
+  const { wallets } = useSolanaWallets();
+
+  const isEmbeddedWallet = (wallet: ConnectedSolanaWallet) =>
+    wallet.walletClientType === "privy";
+
+  const wallet = wallets[0];
 
   /* ------------------------- Handlers ----------------------------- */
 
@@ -73,16 +83,42 @@ export default function TransferModal() {
     setStep("confirm");
   }, []);
 
-  const handleSign = useCallback(() => {
-    setStep("processing");
+  const handleSign = useCallback(
+    async (data: ProcessedTransferData) => {
+      try {
+        setStep("processing");
 
-    // Simulate async signing
-    setTimeout(() => {
-      const success = Math.random() > 0.3;
-      setTransferStatus(success ? "success" : "error");
-      setStep("result");
-    }, 2500);
-  }, []);
+        if (!wallet) throw new Error("Connect wallet first");
+
+        const connection = new Connection(
+          process.env.NEXT_PUBLIC_GO_GETBLOCK_URL!,
+          "confirmed"
+        );
+
+        if (!isEmbeddedWallet(wallet)) {
+          const tx = await buildUsdcTransferTx(
+            connection,
+            new PublicKey(wallet.address),
+            new PublicKey(data.walletAddress),
+            data.amount
+          );
+
+          const signature = await wallet.sendTransaction(tx, connection, {
+            maxRetries: 5,
+          });
+
+          console.log(signature);
+          setTransactionSignature(signature);
+          setStep("result");
+          setTransferStatus("success");
+        }
+      } catch (error) {
+        console.error(error);
+        setTransferStatus("error");
+      }
+    },
+    [wallet]
+  );
 
   const resetModal = useCallback(() => {
     setTransferData(null);
@@ -131,7 +167,7 @@ export default function TransferModal() {
               <TransactionResult
                 transferStatus={transferStatus!}
                 transferData={transferData}
-                transactionId={transactionId}
+                transactionId={transactionSignature!}
               />
             )}
           </CardContent>
@@ -175,7 +211,7 @@ export default function TransferModal() {
             {step === "confirm" && (
               <Button
                 className="bg-purple-600 text-white hover:bg-purple-700 cursor-pointer"
-                onClick={handleSign}
+                onClick={async () => await handleSign(transferData!)}
                 disabled={isProcessing}
               >
                 Sign Transaction
