@@ -71,8 +71,8 @@ export default function TransferModal() {
 
   const { wallets } = useSolanaWallets();
 
-  const isEmbeddedWallet = (wallet: ConnectedSolanaWallet) =>
-    wallet.walletClientType === "privy";
+  const isEmbeddedWallet = (w: ConnectedSolanaWallet) =>
+    w.walletClientType === "privy";
 
   const wallet = wallets[0];
 
@@ -89,6 +89,7 @@ export default function TransferModal() {
         setStep("processing");
 
         if (!wallet) throw new Error("Connect wallet first");
+        if (!data) throw new Error("Missing transfer data");
 
         const connection = new Connection(
           process.env.NEXT_PUBLIC_GO_GETBLOCK_URL!,
@@ -107,7 +108,6 @@ export default function TransferModal() {
             maxRetries: 5,
           });
 
-          console.log(signature);
           setTransactionSignature(signature);
           setStep("result");
           setTransferStatus("success");
@@ -117,7 +117,7 @@ export default function TransferModal() {
         setTransferStatus("error");
       }
     },
-    [wallet]
+    [wallet?.address]
   );
 
   const resetModal = useCallback(() => {
@@ -211,7 +211,10 @@ export default function TransferModal() {
             {step === "confirm" && (
               <Button
                 className="bg-purple-600 text-white hover:bg-purple-700 cursor-pointer"
-                onClick={async () => await handleSign(transferData!)}
+                onClick={() => {
+                  if (!transferData) return;
+                  handleSign(transferData);
+                }}
                 disabled={isProcessing}
               >
                 Sign Transaction

@@ -1,5 +1,3 @@
-"use server";
-
 import { USDC_MINT_ADDRESS } from "@/lib/constants";
 import { Connection, PublicKey, Transaction } from "@solana/web3.js";
 import {
