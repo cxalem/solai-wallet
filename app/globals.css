@@ -120,3 +120,21 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Animation utilities */
+@layer utilities {
+  .animate-pulse-width {
+    animation: pulse-width 1.5s ease-in-out infinite;
+  }
+}
+
+/* Animation keyframes */
+@keyframes pulse-width {
+  0%,
+  100% {
+    width: 25%;
+  }
+  50% {
+    width: 75%;
+  }
+}

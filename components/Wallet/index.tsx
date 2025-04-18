@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { WalletSkeleton } from "./wallet-skeleton";
 import { Copy, Check, User } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import TransferModal from "@/components/TransferModal";
 
 // Assuming 1 USDC = $1 (this is generally true as USDC is a stablecoin)
 const USDC_TO_USD_RATE = 1;
@@ -92,7 +93,7 @@ function WalletContent() {
                   </p>
                   <button
                     onClick={copyToClipboard}
-                    className="text-zinc-400 hover:text-white transition-colors"
+                    className="text-zinc-400 hover:text-white transition-colors cursor-pointer"
                   >
                     {copied ? (
                       <Check className="h-3.5 w-3.5" />
@@ -112,9 +113,7 @@ function WalletContent() {
           </div>
         </CardContent>
       </Card>
-      <Button className="w-full bg-purple-700 hover:bg-purple-800 cursor-pointer">
-        Transfer
-      </Button>
+      <TransferModal />
     </div>
   );
 }
