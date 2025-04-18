@@ -23,7 +23,7 @@ import { TransferForm, type ProcessedTransferData } from "./transfer-form";
 import { TransferConfirmation } from "./transfer-confirmation";
 import { ProcessingAnimation } from "./processing-animation";
 import { TransactionResult } from "./transaction-result";
-import { ConnectedSolanaWallet, useSolanaWallets } from "@privy-io/react-auth";
+import { useSolanaWallets } from "@privy-io/react-auth";
 import { Connection, PublicKey } from "@solana/web3.js";
 import { buildUsdcTransferTx } from "./actions";
 
@@ -71,9 +71,6 @@ export default function TransferModal() {
 
   const { wallets } = useSolanaWallets();
 
-  const isEmbeddedWallet = (w: ConnectedSolanaWallet) =>
-    w.walletClientType === "privy";
-
   const wallet = wallets[0];
 
   /* ------------------------- Handlers ----------------------------- */
@@ -96,22 +93,19 @@ export default function TransferModal() {
           "confirmed"
         );
 
-        if (!isEmbeddedWallet(wallet)) {
-          const tx = await buildUsdcTransferTx(
-            connection,
-            new PublicKey(wallet.address),
-            new PublicKey(data.walletAddress),
-            data.amount
-          );
+        const tx = await buildUsdcTransferTx(
+          connection,
+          new PublicKey(wallet.address),
+          new PublicKey(data.walletAddress),
+          data.amount
+        );
 
-          const signature = await wallet.sendTransaction(tx, connection, {
-            maxRetries: 5,
-          });
-
-          setTransactionSignature(signature);
-          setStep("result");
-          setTransferStatus("success");
-        }
+        const signature = await wallet.sendTransaction(tx, connection, {
+          maxRetries: 5,
+        });
+        setTransactionSignature(signature);
+        setStep("result");
+        setTransferStatus("success");
       } catch (error) {
         console.error(error);
         setTransferStatus("error");
