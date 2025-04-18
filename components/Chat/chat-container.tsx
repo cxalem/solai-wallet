@@ -25,7 +25,7 @@ export function ChatContainer({
   messagesEndRef,
 }: ChatContainerProps) {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-zinc-900 text-zinc-100">
+    <section className="flex flex-col items-center min-h-screen bg-zinc-900 text-zinc-100">
       <Card className="w-full max-w-2xl shadow-lg border-zinc-800 bg-zinc-800 max-h-[60vh]">
         <ChatHeader />
 
@@ -52,6 +52,6 @@ export function ChatContainer({
           />
         </CardFooter>
       </Card>
-    </div>
+    </section>
   )
 }
