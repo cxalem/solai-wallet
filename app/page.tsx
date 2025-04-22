@@ -1,8 +1,12 @@
 "use client";
 
-import { usePrivy } from "@privy-io/react-auth";
-import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { usePrivy } from "@privy-io/react-auth";
+import Hero from "@/components/Hero";
+import Features from "@/components/Features";
+import HowItWorks from "@/components/HowItWorks";
+import CTA from "@/components/Cta";
 
 export default function Home() {
   const { ready, authenticated } = usePrivy();
@@ -14,13 +18,12 @@ export default function Home() {
     }
   }, [ready, authenticated, router]);
 
-  if (!ready) {
-    return <div>Loading...</div>;
-  }
-
-  if (!authenticated) {
-    return <h1 className="text-white">Log in to start using the chat</h1>;
-  }
-
-  return null;
+  return (
+    <>
+      <Hero />
+      <Features />
+      <HowItWorks />
+      <CTA />
+    </>
+  );
 }
