@@ -32,7 +32,7 @@ export default function RootLayout({
       >
         <Providers>
           <NavBar />
-          <main className="min-h-screen bg-gradient-to-b from-black via-purple-950/20 to-black overflow-hidden mt-24">
+          <main className="min-h-screen bg-gradient-to-b from-black via-purple-950/20 to-black overflow-hidden">
             {children}
           </main>
         </Providers>

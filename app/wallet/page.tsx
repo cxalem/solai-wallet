@@ -12,7 +12,7 @@ export default async function WalletPage() {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 min-h-[calc(100vh-100px)] pt-4 max-w-7xl mx-auto gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 min-h-[calc(100vh-100px)] pt-4 max-w-7xl mx-auto gap-6 mt-20">
       <section>
         <Wallet />
       </section>

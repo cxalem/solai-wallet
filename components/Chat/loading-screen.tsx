@@ -9,7 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export function LoadingScreen() {
   return (
-    <section className="flex flex-col items-center min-h-screen bg-zinc-900 text-zinc-100">
+    <section className="flex flex-col items-center min-h-screen text-zinc-100">
       <Card className="w-full max-w-2xl shadow-lg border-zinc-800 bg-zinc-800 max-h-[60vh]">
         <CardHeader className="border-b border-zinc-700 pb-3">
           <CardTitle className="flex items-center gap-2">
